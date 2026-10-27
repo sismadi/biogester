@@ -1,0 +1,25 @@
+name = "bsd"
+main = "src/worker.js"
+compatibility_date = "2025-01-01"
+
+# Frontend statis (html/js/css) disajikan Cloudflare langsung dari ./public.
+# Hanya /api/* yang menjalankan kode Worker (backend).
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+# Environment (non-rahasia). Boleh diubah di dashboard Cloudflare.
+[vars]
+ENVIRONMENT = "production"
+SESSION_TTL = "604800"   # umur sesi (detik) = 7 hari
+MIN_TUKAR = "10000"      # minimal penukaran saldo (Rp)
+
+# Database D1: isi database_id dari `wrangler d1 create bsd`
+[[d1_databases]]
+binding = "DB"
+database_name = "bsd"
+database_id = "2f689769-93c8-454f-9024-72b8591c5ac2"
+
+# RAHASIA (jangan ditulis di sini) -> `wrangler secret put SESSION_SECRET`
+#                                      `wrangler secret put CAPTCHA_SECRET`
