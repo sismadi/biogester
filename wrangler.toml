@@ -1,4 +1,4 @@
-name = "bsd"
+name = "biogester"
 main = "src/worker.js"
 compatibility_date = "2025-01-01"
 
@@ -15,11 +15,11 @@ ENVIRONMENT = "production"
 SESSION_TTL = "604800"   # umur sesi (detik) = 7 hari
 MIN_TUKAR = "10000"      # minimal penukaran saldo (Rp)
 
-# Database D1: isi database_id dari `wrangler d1 create bsd`
+# Database D1: isi database_id dari `wrangler d1 create biogester`
 [[d1_databases]]
 binding = "DB"
-database_name = "bsd"
-database_id = "2f689769-93c8-454f-9024-72b8591c5ac2"
+database_name = "biogester"
+database_id = "8b102801-2b36-4918-8c43-a7461320e390"
 
 # RAHASIA (jangan ditulis di sini) -> `wrangler secret put SESSION_SECRET`
 #                                      `wrangler secret put CAPTCHA_SECRET`

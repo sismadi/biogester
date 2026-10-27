@@ -6,7 +6,7 @@ Peran: **Pengguna (nasabah)**, **Petugas (admin TPS)**, **Pengepul**, **Admin (s
 ## Arsitektur
 
 ```
-GitHub ──(Workers Builds)──▶ Cloudflare Worker "bsd"
+GitHub ──(Workers Builds)──▶ Cloudflare Worker "biogester"
                               ├─ public/            Frontend: HTML + CSS + JS (aset statis Cloudflare)
                               ├─ src/worker.js      Gateway backend: sesi, role, CSRF, routing
                               │   └─ src/services/  auth · setoran · penukaran · dompet · master · penjualan · delegasi · pasar · backup
@@ -40,7 +40,7 @@ Sesuai alur "Sistem Terpadu BioGester": sampah organik → BioGester → biogas 
 - **Backup**: unduh seluruh data (pengguna, transaksi, master data, foto) sebagai satu berkas JSON. Wajib konfirmasi PIN. Berkas memuat hash PIN → simpan aman.
 - **Restore**: mengganti **seluruh** data dengan isi berkas, dalam satu batch D1 (atomik: gagal = data tidak berubah). Berkas divalidasi dulu (format, tabel/kolom dikenal, minimal satu admin aktif); wajib PIN + mengetik `PULIHKAN`.
 - Tabel baru: daftarkan namanya di `TABLES` pada `src/services/backup.js` (urutan induk → anak); kolomnya dibaca otomatis dari skema.
-- Untuk data sangat besar atau backup terjadwal, gunakan `npx wrangler d1 export bsd --remote --output=backup.sql` (dan `d1 execute --file` untuk memulihkan) atau Cloudflare D1 Time Travel.
+- Untuk data sangat besar atau backup terjadwal, gunakan `npx wrangler d1 export biogester --remote --output=backup.sql` (dan `d1 execute --file` untuk memulihkan) atau Cloudflare D1 Time Travel.
 
 ## Keamanan
 - Captcha penjumlahan stateless: jawaban tidak pernah dikirim ke browser (HMAC dengan `CAPTCHA_SECRET`), kedaluwarsa 5 menit, sekali pakai (tabel `captcha_used`).
@@ -53,12 +53,12 @@ Sesuai alur "Sistem Terpadu BioGester": sampah organik → BioGester → biogas 
 ```bash
 npm install
 npx wrangler login
-npx wrangler d1 create bsd            # salin database_id ke wrangler.toml
+npx wrangler d1 create biogester            # salin database_id ke wrangler.toml
 npm run db:schema && npm run db:seed        # buat tabel + data contoh
 npx wrangler secret put SESSION_SECRET      # isi string acak panjang (mis. openssl rand -hex 32)
 npx wrangler secret put CAPTCHA_SECRET      # string acak lain
 node scripts/make-admin.mjs 0812xxxxxxxx "Nama Anda" 123456 > admin.sql
-npx wrangler d1 execute bsd --remote --file=admin.sql   # super admin pertama
+npx wrangler d1 execute biogester --remote --file=admin.sql   # super admin pertama
 npm run deploy
 ```
 Lokal: salin `.dev.vars.example` → `.dev.vars`, lalu `npm run db:local && npm run dev`.
@@ -66,9 +66,9 @@ Lokal: salin `.dev.vars.example` → `.dev.vars`, lalu `npm run db:local && npm 
 ## Upgrade database lama (sebelum fitur pengepul)
 Urutan (boleh lewat wrangler maupun Cloudflare Studio, perintah dijalankan satu per satu):
 ```bash
-npx wrangler d1 export bsd --remote --output=backup.sql                   # cadangan dulu
+npx wrangler d1 export biogester --remote --output=backup.sql                   # cadangan dulu
 npm run db:schema                                                          # tabel penjualan, delegasi (IF NOT EXISTS, aman diulang)
-npx wrangler d1 execute bsd --remote --file=migrations/001_pengepul.sql   # izinkan role pengepul, data tetap
+npx wrangler d1 execute biogester --remote --file=migrations/001_pengepul.sql   # izinkan role pengepul, data tetap
 npm run db:seed                                                            # kategori baru (opsional)
 ```
 Database baru cukup `db:schema` + `db:seed`.

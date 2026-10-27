@@ -3,7 +3,7 @@
 -- Aman dijalankan di Cloudflare Studio (perintah dijalankan satu per satu) maupun wrangler:
 -- tabel yang merujuk users dikosongkan sementara (isinya dicadangkan dulu), sehingga tidak ada pelanggaran foreign key.
 -- Urutan:
---   1) wrangler d1 export bsd --remote --output=backup.sql      (cadangan, sangat disarankan)
+--   1) wrangler d1 export biogester --remote --output=backup.sql      (cadangan, sangat disarankan)
 --   2) jalankan schema.sql   (membuat tabel penjualan & delegasi bila belum ada)
 --   3) jalankan file ini
 --   4) jalankan seed.sql     (opsional: kategori baru)
